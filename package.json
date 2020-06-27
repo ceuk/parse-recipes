@@ -1,0 +1,33 @@
+{
+  "name": "recipe-parser",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.js",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "recipe-ingredient-parser": "^1.5.6",
+    "request": "^2.88.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.10.3",
+    "babel-loader": "^8.1.0",
+    "eslint": "^7.3.1",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.20.0",
+    "eslint-plugin-standard": "^4.0.1",
+    "serverless-plugin-transpiler": "^2.0.0",
+    "serverless-webpack": "^5.3.2",
+    "webpack": "^4.43.0",
+    "webpack-node-externals": "^1.7.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "parse-test": "serverless invoke local --function parse "
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
