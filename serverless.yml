@@ -2,6 +2,8 @@ service: recipe-parser
 provider:
   name: aws
   runtime: nodejs12.x
+  profile: personal
+  region: eu-west-2
 plugins:
   - serverless-webpack
 custom:
@@ -14,3 +16,23 @@ functions:
       - http:
           path: parse
           method: post
+          authorizer:
+            name: cognito
+            arn: arn:aws:cognito-idp:eu-west-2:865099717294:userpool/eu-west-2_FQyp01gP7
+            claims:
+              - email
+resources: # CloudFormation template syntax from here on.
+  Resources:
+    recipesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: recipes
+        AttributeDefinitions:
+          - AttributeName: title
+            AttributeType: S
+        KeySchema:
+          - AttributeName: title
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
