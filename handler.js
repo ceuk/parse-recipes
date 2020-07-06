@@ -1,8 +1,8 @@
 const Parser = require('./lib/Parser')
 
-export const parse = async (event, context, cb) => {
+export const parse = async (event) => {
   try {
-    const parser = new Parser(event.body)
+    const parser = new Parser(event.body.url)
     const recipe = await parser.parse()
     return {
       statusCode: 200,
@@ -11,7 +11,6 @@ export const parse = async (event, context, cb) => {
     }
   } catch (err) {
     console.error(err)
-    cb(err)
     return {
       statusCode: 500,
       headers: { 'Content-Type': 'application/json' },
