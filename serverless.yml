@@ -16,13 +16,47 @@ functions:
       - http:
           path: parse
           method: post
+          integration: lambda
           authorizer:
-            name: cognito
-            arn: arn:aws:cognito-idp:eu-west-2:865099717294:userpool/eu-west-2_FQyp01gP7
-            claims:
-              - email
+            name: apiGatewayAuthorizer
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: apiGatewayAuthorizer
 resources: # CloudFormation template syntax from here on.
   Resources:
+    cognitoUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        MfaConfiguration: OFF
+        UserPoolName: recipe-app-users
+        UsernameAttributes:
+          - email
+        Policies:
+          PasswordPolicy:
+            MinimumLength: 6
+            RequireLowercase: False
+            RequireNumbers: True
+            RequireSymbols: False
+            RequireUppercase: True
+    cognitoUserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: recipe-app-user-pool-client
+        GenerateSecret: False
+        UserPoolId:
+          Ref: cognitoUserPool
+    apiGatewayAuthorizer:
+      DependsOn:
+        - ApiGatewayRestApi
+      Type: AWS::ApiGateway::Authorizer
+      Properties:
+        Name: cognito-authorizer
+        IdentitySource: method.request.header.Authorization
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        Type: COGNITO_USER_POOLS
+        ProviderARNs:
+          - Fn::GetAtt: [cognitoUserPool, Arn]
     recipesTable:
       Type: AWS::DynamoDB::Table
       Properties:
